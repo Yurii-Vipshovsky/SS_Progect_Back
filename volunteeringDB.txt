@@ -1,0 +1,206 @@
+--
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 13.2
+-- Dumped by pg_dump version 13.2
+
+-- Started on 2021-04-25 15:50:23
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET xmloption = content;
+SET client_min_messages = warning;
+SET row_security = off;
+
+--
+-- TOC entry 625 (class 1247 OID 16892)
+-- Name: emaildata; Type: DOMAIN; Schema: public; Owner: postgres
+--
+
+CREATE DOMAIN public.emaildata AS character varying(50)
+	CONSTRAINT emaildata_check CHECK (((VALUE)::text ~ '^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})'::text));
+
+
+ALTER DOMAIN public.emaildata OWNER TO postgres;
+
+--
+-- TOC entry 632 (class 1247 OID 16946)
+-- Name: phone_number_data; Type: DOMAIN; Schema: public; Owner: postgres
+--
+
+CREATE DOMAIN public.phone_number_data AS character varying(13)
+	CONSTRAINT phonenumberdata_check CHECK ((("position"((VALUE)::text, '+'::text) = 1) AND ("substring"((VALUE)::text, 2, char_length((VALUE)::text)) ~ '^[0-9\.]+$'::text)));
+
+
+ALTER DOMAIN public.phone_number_data OWNER TO postgres;
+
+--
+-- TOC entry 629 (class 1247 OID 16906)
+-- Name: type_of_volonteer; Type: TYPE; Schema: public; Owner: postgres
+--
+
+CREATE TYPE public.type_of_volonteer AS ENUM (
+    'eco',
+    'zoo',
+    'phone',
+    'intelectual',
+    'school',
+    'homeless',
+    'families',
+    'inclusive',
+    'culture',
+    'medecine'
+);
+
+
+ALTER TYPE public.type_of_volonteer OWNER TO postgres;
+
+SET default_tablespace = '';
+
+SET default_table_access_method = heap;
+
+--
+-- TOC entry 200 (class 1259 OID 16948)
+-- Name: client; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.client (
+    login character varying(20) NOT NULL,
+    email public.emaildata NOT NULL,
+    name character varying(50) NOT NULL,
+    birthday date,
+    city character varying(20),
+    password character varying(50) NOT NULL,
+    phonenumber public.phone_number_data NOT NULL,
+    isorganization boolean NOT NULL,
+    site character varying(50)
+);
+
+
+ALTER TABLE public.client OWNER TO postgres;
+
+--
+-- TOC entry 202 (class 1259 OID 16961)
+-- Name: event; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.event (
+    id integer NOT NULL,
+    createdby character varying(20) NOT NULL,
+    name character varying(100) NOT NULL,
+    type public.type_of_volonteer NOT NULL,
+    place character varying(100) NOT NULL,
+    description text NOT NULL,
+    date date
+);
+
+
+ALTER TABLE public.event OWNER TO postgres;
+
+--
+-- TOC entry 201 (class 1259 OID 16959)
+-- Name: event_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.event_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.event_id_seq OWNER TO postgres;
+
+--
+-- TOC entry 3011 (class 0 OID 0)
+-- Dependencies: 201
+-- Name: event_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.event_id_seq OWNED BY public.event.id;
+
+
+--
+-- TOC entry 2867 (class 2604 OID 16964)
+-- Name: event id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.event ALTER COLUMN id SET DEFAULT nextval('public.event_id_seq'::regclass);
+
+
+--
+-- TOC entry 3003 (class 0 OID 16948)
+-- Dependencies: 200
+-- Data for Name: client; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.client (login, email, name, birthday, city, password, phonenumber, isorganization, site) FROM stdin;
+Login1	firstvolunt@gmail.com	Nastya	2002-12-12	Lviv	12345	+380996762941	f	\N
+login.login	organ@mail.com	Organization	\N	Kyiv	qwer123	+380689237411	t	organization.com.ua
+testlogin	testlogin@lnu.edu.ua	test	1989-09-09	Lviv	testpass	+380986454962	f	\N
+\.
+
+
+--
+-- TOC entry 3005 (class 0 OID 16961)
+-- Dependencies: 202
+-- Data for Name: event; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.event (id, createdby, name, type, place, description, date) FROM stdin;
+1	login.login	Любимо світ!	eco	Львів, парк Франка	Давайте садити дерева!	2021-05-23
+2	testlogin	Допоможи тваринам)	zoo	Львів,  вул. Кульпарківська 32	Приносьте корм і все, що можете!	2021-05-04
+3	Login1	Їм потрібна твоя допомога	medecine	Львів, вул Чупринки 61	Чекаємо на тебе і твою допомогу.	2021-05-30
+\.
+
+
+--
+-- TOC entry 3012 (class 0 OID 0)
+-- Dependencies: 201
+-- Name: event_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.event_id_seq', 1, false);
+
+
+--
+-- TOC entry 2869 (class 2606 OID 16955)
+-- Name: client client_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.client
+    ADD CONSTRAINT client_pkey PRIMARY KEY (login);
+
+
+--
+-- TOC entry 2871 (class 2606 OID 16969)
+-- Name: event event_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.event
+    ADD CONSTRAINT event_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 2872 (class 2606 OID 16970)
+-- Name: event event_createdby_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.event
+    ADD CONSTRAINT event_createdby_fkey FOREIGN KEY (createdby) REFERENCES public.client(login) ON DELETE CASCADE;
+
+
+-- Completed on 2021-04-25 15:50:23
+
+--
+-- PostgreSQL database dump complete
+--
+
