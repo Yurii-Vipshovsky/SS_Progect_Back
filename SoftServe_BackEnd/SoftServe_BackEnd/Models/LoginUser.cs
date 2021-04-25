@@ -5,8 +5,7 @@ namespace SoftServe_BackEnd.Models
     public class LoginUser
     {
         [Required]
-        [EmailAddress] 
-        public string Email;
+        public string LoginString;
 
         [Required]
         public string Password;

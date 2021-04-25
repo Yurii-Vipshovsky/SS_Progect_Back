@@ -1,37 +1,41 @@
 using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SoftServe_BackEnd.Models
 {
+    [Table("event")]
     public class Event
     {
+        [Key] 
+        public int Id;
+        
         [Required] 
-        public bool IsOrganization;
-
-        public string OrganizationName;
-        public string SiteUrl;
-
-        public string FullName;
-        [Phone]
-        public string PhoneNumber;
+        [Column("created_by")]
+        [MaxLength(20)]
+        public User CreatedBy;
         
         [Required]
-        [EmailAddress]
-        public string Email;
-        
-        [Required]
+        [Column("name")]
+        [MaxLength(100)]
         public string EventName;
         
         [Required]
+        [Column("type")]
         public VolunteerType TypeOfVolunteer;
-        
+
         [Required]
+        [Column("place")]
+        [MaxLength(100)]
         public string Location;
         
         [Required]
-        public DateTime CarryingOutTime;
+        [Column("description")]
+        public string AdditionalInfo;
         
         [Required]
-        public string AdditionalInfo;
+        [Column("date")]
+        public DateTime CarryingOutTime;
+
     }
 }

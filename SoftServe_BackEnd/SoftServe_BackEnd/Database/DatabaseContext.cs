@@ -11,10 +11,8 @@ namespace SoftServe_BackEnd.Database
     {
         public DatabaseContext(DbContextOptions<DatabaseContext> options): base(options)
         {
-            
+
         }
-        
-        public DbSet<Volunteer> Volunteers { get; set; }
         public DbSet<Event> Events { get; set; }
 
         public DbSet<IdentityUserClaim<Guid>> IdentityUserClaims { get; set; }

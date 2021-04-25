@@ -23,5 +23,14 @@ namespace SoftServe_BackEnd.Models
         
         [Required]
         public string Password;
+
+        [Required]
+        public string PhoneNumber;
+        
+        [Required] 
+        public bool IsOrganization;
+        
+        [MaxLength(50)]
+        public string SiteUrl;
     }
 }
