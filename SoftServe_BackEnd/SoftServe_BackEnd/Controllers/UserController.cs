@@ -30,23 +30,6 @@ namespace SoftServe_BackEnd.Controllers
             _configuration = configuration;
         }
         
-        ///<remarks>
-        /// Sample request:
-        ///
-        /// 
-        ///     {
-        ///        "NickName": "SampleName",
-        ///        "Email": "example@example.com",
-        ///        "FullName": "Full Name",
-        ///        "Birthday": 20.02.2002,
-        ///        "City": "Lviv",
-        ///        "Password": "password",
-        ///        "PhoneNumber": "+380000000000",
-        ///        "IsOrganization": true,
-        ///        "SiteUrl": "https://localhost:5001/swagger/index.html"
-        ///     }
-        ///
-        ///</remarks>
         [AllowAnonymous]
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody]RegisterUser userModel)

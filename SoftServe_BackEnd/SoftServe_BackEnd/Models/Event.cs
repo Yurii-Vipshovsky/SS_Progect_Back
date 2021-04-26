@@ -12,7 +12,6 @@ namespace SoftServe_BackEnd.Models
 
         [Required] 
         [Column("created_by")]
-        [MaxLength(20)]
         public User CreatedBy { get; set; }
         
         [Required]

@@ -4,25 +4,6 @@
         <name>SoftServe_BackEnd</name>
     </assembly>
     <members>
-        <member name="M:SoftServe_BackEnd.Controllers.UserController.Register(SoftServe_BackEnd.Models.RegisterUser)">
-            <remarks>
-             Sample request:
-            
-             
-                 {
-                    "NickName": "SampleName",
-                    "Email": "example@example.com",
-                    "FullName": "Full Name",
-                    "Birthday": 20.02.2002,
-                    "City": "Lviv",
-                    "Password": "password",
-                    "PhoneNumber": "+380000000000",
-                    "IsOrganization": true,
-                    "SiteUrl": "https://localhost:5001/swagger/index.html"
-                 }
-            
-            </remarks>
-        </member>
         <member name="M:SoftServe_BackEnd.ServiceExtensions.ConfigureEntityFramework(Microsoft.Extensions.DependencyInjection.IServiceCollection,Microsoft.Extensions.Configuration.IConfiguration)">
             <summary>
             Configures Entity Framework DbContext for the project.
