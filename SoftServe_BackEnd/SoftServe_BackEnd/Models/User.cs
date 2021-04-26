@@ -21,14 +21,14 @@ namespace SoftServe_BackEnd.Models
         [Required]
         [Column("name")]
         [MaxLength(50)]
-        public string FullName;
+        public string FullName{ get; set; }
         
         [Column("birthday")]
-        public DateTime Birthday;
+        public DateTime Birthday{ get; set; }
         
         [Column("city")]
         [MaxLength(20)]
-        public string City;
+        public string City{ get; set; }
 
         [Required]
         [Column("password")]
@@ -41,10 +41,10 @@ namespace SoftServe_BackEnd.Models
         
         [Required] 
         [Column("is_organization")]
-        public bool IsOrganization;
+        public bool IsOrganization{ get; set; }
         
         [Column("site")]
         [MaxLength(50)]
-        public string SiteUrl;
+        public string SiteUrl{ get; set; }
     }
 }

@@ -7,35 +7,35 @@ namespace SoftServe_BackEnd.Models
     [Table("event")]
     public class Event
     {
-        [Key] 
-        public int Id;
-        
+        [Key]
+        public int Id { get; set; }
+
         [Required] 
         [Column("created_by")]
         [MaxLength(20)]
-        public User CreatedBy;
+        public User CreatedBy { get; set; }
         
         [Required]
         [Column("name")]
         [MaxLength(100)]
-        public string EventName;
+        public string EventName { get; set; }
         
         [Required]
         [Column("type")]
-        public VolunteerType TypeOfVolunteer;
+        public VolunteerType TypeOfVolunteer { get; set; }
 
         [Required]
         [Column("place")]
         [MaxLength(100)]
-        public string Location;
+        public string Location { get; set; }
         
         [Required]
         [Column("description")]
-        public string AdditionalInfo;
+        public string AdditionalInfo { get; set; }
         
         [Required]
         [Column("date")]
-        public DateTime CarryingOutTime;
+        public DateTime CarryingOutTime { get; set; }
 
     }
 }

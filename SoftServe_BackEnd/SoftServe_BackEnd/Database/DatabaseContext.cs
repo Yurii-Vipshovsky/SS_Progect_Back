@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using SoftServe_BackEnd.Models;
-using Microsoft.EntityFrameworkCore;
 
 namespace SoftServe_BackEnd.Database
 {

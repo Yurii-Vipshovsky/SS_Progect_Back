@@ -30,9 +30,26 @@ namespace SoftServe_BackEnd.Controllers
             _configuration = configuration;
         }
         
+        ///<remarks>
+        /// Sample request:
+        ///
+        /// 
+        ///     {
+        ///        "NickName": "SampleName",
+        ///        "Email": "example@example.com",
+        ///        "FullName": "Full Name",
+        ///        "Birthday": 20.02.2002,
+        ///        "City": "Lviv",
+        ///        "Password": "password",
+        ///        "PhoneNumber": "+380000000000",
+        ///        "IsOrganization": true,
+        ///        "SiteUrl": "https://localhost:5001/swagger/index.html"
+        ///     }
+        ///
+        ///</remarks>
         [AllowAnonymous]
         [HttpPost("register")]
-        public async Task<IActionResult> Register(RegisterUser userModel)
+        public async Task<IActionResult> Register([FromBody]RegisterUser userModel)
         {
             var emailIsBusy = await _userManager.FindByEmailAsync(userModel.Email);
             if (emailIsBusy != null)
@@ -157,9 +174,9 @@ namespace SoftServe_BackEnd.Controllers
             var signIn = new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256);
 
             var tokenOptions = new JwtSecurityToken(
-                issuer: _configuration.GetSection("Authentication:JWT:Issuer").Value,
-                audience: _configuration.GetSection("Authentication:JWT:Audience").Value,
-                claims: new List<Claim>(),
+                _configuration.GetSection("Authentication:JWT:Issuer").Value,
+                _configuration.GetSection("Authentication:JWT:Audience").Value,
+                new List<Claim>(),
                 expires: DateTime.Now.AddMinutes(30),
                 signingCredentials: signIn
             );

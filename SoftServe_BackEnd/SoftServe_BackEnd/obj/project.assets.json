@@ -1477,11 +1477,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\Projects\\SoftServe\\SoftServe_BackEnd\\SoftServe_BackEnd\\SoftServe_BackEnd.csproj",
+      "projectUniqueName": "D:\\Projects\\SoftServe\\SS_Progect_Back\\SoftServe_BackEnd\\SoftServe_BackEnd\\SoftServe_BackEnd.csproj",
       "projectName": "SoftServe_BackEnd",
-      "projectPath": "D:\\Projects\\SoftServe\\SoftServe_BackEnd\\SoftServe_BackEnd\\SoftServe_BackEnd.csproj",
+      "projectPath": "D:\\Projects\\SoftServe\\SS_Progect_Back\\SoftServe_BackEnd\\SoftServe_BackEnd\\SoftServe_BackEnd.csproj",
       "packagesPath": "C:\\Users\\Arsen\\.nuget\\packages\\",
-      "outputPath": "D:\\Projects\\SoftServe\\SoftServe_BackEnd\\SoftServe_BackEnd\\obj\\",
+      "outputPath": "D:\\Projects\\SoftServe\\SS_Progect_Back\\SoftServe_BackEnd\\SoftServe_BackEnd\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\Arsen\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -1512,17 +1512,11 @@
         "dependencies": {
           "Microsoft.AspNetCore.Authentication.JwtBearer": {
             "target": "Package",
-            "version": "[5.0.1, )",
-            "noWarn": [
-              "NU1605"
-            ]
+            "version": "[5.0.1, )"
           },
           "Microsoft.AspNetCore.Authentication.OpenIdConnect": {
             "target": "Package",
-            "version": "[5.0.1, )",
-            "noWarn": [
-              "NU1605"
-            ]
+            "version": "[5.0.1, )"
           },
           "Microsoft.AspNetCore.Identity.EntityFrameworkCore": {
             "target": "Package",

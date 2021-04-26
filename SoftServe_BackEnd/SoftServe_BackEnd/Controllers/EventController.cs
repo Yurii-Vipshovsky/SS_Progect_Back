@@ -21,14 +21,15 @@ namespace SoftServe_BackEnd.Controllers
         {
             _context = context;
         }
-        
+
         [HttpGet]
         public async Task<IActionResult> GetEvents(
-            [FromQuery] PaginationFilter filter,[FromQuery]string sortBy, [FromQuery]string search, [FromQuery]string order="asc")
+            [FromQuery] PaginationFilter filter, [FromQuery] string sortBy, [FromQuery] string search,
+            [FromQuery] string order = "asc")
         {
             sortBy = string.IsNullOrEmpty(sortBy) ? "Id" : sortBy;
-            var sortByProperty = typeof(Event).GetProperty(sortBy); 
-            
+            var sortByProperty = typeof(Event).GetProperty(sortBy);
+
             var resultList = new List<Event>();
 
             if (search != null)
@@ -45,7 +46,7 @@ namespace SoftServe_BackEnd.Controllers
             }
 
             var pageFilter = new PaginationFilter(filter.PageNumber, filter.PageSize);
-            
+
             var pagedData = resultList
                 .Skip((pageFilter.PageNumber - 1) * pageFilter.PageSize)
                 .Take(pageFilter.PageSize).ToList().OrderBy(employee =>
@@ -54,17 +55,18 @@ namespace SoftServe_BackEnd.Controllers
             {
                 pagedData.Reverse();
             }
-            
+
             var totalRecords = await _context.Events.CountAsync();
             var pagedResponse = Pagination.CreatePagedResponse(pagedData, pageFilter, totalRecords);
-            
+
             if (pagedResponse.TotalRecords == 0)
             {
                 pagedResponse.Message = "Page is empty";
             }
+
             return Ok(pagedResponse);
         }
-        
+
         [HttpGet("{id}")]
         public async Task<IActionResult> GetEvent(int id)
         {
@@ -72,12 +74,14 @@ namespace SoftServe_BackEnd.Controllers
             {
                 return NotFound();
             }
+
             var currentEvent = await _context.Events.FindAsync(id);
-            return  Ok(new Response<Event>(currentEvent));;
+            return Ok(new Response<Event>(currentEvent));
+            ;
         }
-        
+
         [HttpPost]
-        public async Task<ActionResult<Event>> PostEvent(Event newEvent)
+        public async Task<ActionResult<Event>> PostEvent([FromBody]Event newEvent)
         {
             await _context.Events.AddAsync(newEvent);
             await _context.SaveChangesAsync();

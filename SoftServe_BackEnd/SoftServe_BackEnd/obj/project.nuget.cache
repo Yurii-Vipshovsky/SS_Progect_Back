@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "WKP+iquVyeey9U9as4TRFCaEpWrx2z16Qw3k2+MmfYx28XR7jFW49iHgd5zGNy4XWZzOf32ASL5kN9sWwJAD1A==",
+  "dgSpecHash": "IwGdK1eIHG3zQq2XGU9NEorttGqG3J8bzDCgWM0Y0iourGLHlmZHyC3Hf3XWcWFD25VCJ4bQZx4zH3hefoq2fA==",
   "success": true,
-  "projectFilePath": "D:\\Projects\\SoftServe\\SoftServe_BackEnd\\SoftServe_BackEnd\\SoftServe_BackEnd.csproj",
+  "projectFilePath": "D:\\Projects\\SoftServe\\SS_Progect_Back\\SoftServe_BackEnd\\SoftServe_BackEnd\\SoftServe_BackEnd.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Arsen\\.nuget\\packages\\humanizer.core\\2.8.26\\humanizer.core.2.8.26.nupkg.sha512",
     "C:\\Users\\Arsen\\.nuget\\packages\\microsoft.aspnetcore.authentication.jwtbearer\\5.0.1\\microsoft.aspnetcore.authentication.jwtbearer.5.0.1.nupkg.sha512",
