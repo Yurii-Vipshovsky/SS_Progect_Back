@@ -4,7 +4,6 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -18,11 +17,11 @@ namespace SoftServe_BackEnd.Controllers
     [Route("/[controller]")]
     public class UserController : Controller
     {
-        private readonly UserManager<User> _userManager;
-        private readonly SignInManager<User> _signinManager;
+        private readonly UserManager<Client> _userManager;
+        private readonly SignInManager<Client> _signinManager;
         private readonly IConfiguration _configuration;
         
-        public UserController(UserManager<User> userManager, SignInManager<User> signinManager,
+        public UserController(UserManager<Client> userManager, SignInManager<Client> signinManager,
             IConfiguration configuration)
         {
             _userManager = userManager;
@@ -30,14 +29,13 @@ namespace SoftServe_BackEnd.Controllers
             _configuration = configuration;
         }
         
-        [AllowAnonymous]
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody]RegisterUser userModel)
         {
             var emailIsBusy = await _userManager.FindByEmailAsync(userModel.Email);
             if (emailIsBusy != null)
             {
-                return StatusCode(StatusCodes.Status409Conflict, new Response<User>
+                return StatusCode(StatusCodes.Status409Conflict, new Response<Client>
                 {
                     Message = "Error",
                     Errors = new[] {"Email is already used"},
@@ -49,7 +47,7 @@ namespace SoftServe_BackEnd.Controllers
             var nickIsBusy = await _userManager.FindByNameAsync(userModel.NickName);
             if (nickIsBusy != null)
             {
-                return StatusCode(StatusCodes.Status409Conflict, new Response<User>
+                return StatusCode(StatusCodes.Status409Conflict, new Response<Client>
                 {
                     Message = "Error",
                     Errors = new[] {"Login name is already used"},
@@ -58,23 +56,22 @@ namespace SoftServe_BackEnd.Controllers
                 });
             }
             
-            var user = new User
+            var user = new Client
             {
-                UserName = userModel.NickName,
+                Login = userModel.NickName,
                 Email = userModel.Email,
-                FullName = userModel.FullName,
+                Name = userModel.FullName,
                 Birthday =  userModel.Birthday,
                 City =  userModel.City,
                 PhoneNumber = userModel.PhoneNumber,
                 IsOrganization = userModel.IsOrganization,
-                SiteUrl = userModel.SiteUrl,
-                SecurityStamp = Guid.NewGuid().ToString()
+                Site = userModel.SiteUrl,
             };
             
             var result = await _userManager.CreateAsync(user, userModel.Password);
             if (!result.Succeeded)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, new Response<User>
+                return StatusCode(StatusCodes.Status500InternalServerError, new Response<Client>
                 {
                     Message = "Error",
                     Errors = new[] {"Something wrong"},
@@ -84,7 +81,7 @@ namespace SoftServe_BackEnd.Controllers
             }
 
             await _signinManager.SignInAsync(user, false);
-            return Ok(new Response<User>
+            return Ok(new Response<Client>
             {
                 Message = "User created successfully",
                 Data = user
@@ -97,7 +94,7 @@ namespace SoftServe_BackEnd.Controllers
             var checkByEmail = await _userManager.FindByEmailAsync(userModel.LoginString);
             var checkByNickName = await _userManager.FindByNameAsync(userModel.LoginString);
             if (!ModelState.IsValid)
-                return StatusCode(StatusCodes.Status404NotFound, new Response<User>
+                return StatusCode(StatusCodes.Status404NotFound, new Response<Client>
                 {
                     Message = "Error",
                     Errors = new[] {"Incorrect data"},
@@ -107,7 +104,7 @@ namespace SoftServe_BackEnd.Controllers
 
             if (checkByEmail == null && checkByNickName == null)
             {
-                return StatusCode(StatusCodes.Status404NotFound, new Response<User>
+                return StatusCode(StatusCodes.Status404NotFound, new Response<Client>
                 {
                     Message = "Error",
                     Errors = new[] {"User is not found"},
@@ -118,10 +115,10 @@ namespace SoftServe_BackEnd.Controllers
 
             var currentUser = checkByEmail ?? checkByNickName;
             var signInResult =
-                await _signinManager.PasswordSignInAsync(currentUser.UserName, userModel.Password, true, false);
+                await _signinManager.PasswordSignInAsync(currentUser.Email, userModel.Password, true, false);
             
             if (!signInResult.Succeeded)
-                return StatusCode(StatusCodes.Status404NotFound, new Response<User>
+                return StatusCode(StatusCodes.Status404NotFound, new Response<Client>
                 {
                     Message = "Error",
                     Errors = new[] {"Email/NickName or password wrong"},
@@ -142,7 +139,7 @@ namespace SoftServe_BackEnd.Controllers
         public async Task<IActionResult> Logout()
         {
             await _signinManager.SignOutAsync();
-            return StatusCode(StatusCodes.Status200OK, new Response<User>
+            return StatusCode(StatusCodes.Status200OK, new Response<Client>
             {
                 Message = "Successful logout",
                 Succeeded = true,

@@ -2,8 +2,6 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Microsoft.OpenApi.Models;
 
 namespace SoftServe_BackEnd
 {
@@ -23,8 +21,8 @@ namespace SoftServe_BackEnd
             services.AddHttpContextAccessor();
             services.AddControllers();
             services.ConfigureEntityFramework(Configuration);
-            services.ConfigureIdentity();
-            services.ConfigureJwtAuthentication(Configuration);
+            //services.ConfigureIdentity();
+            //services.ConfigureJwtAuthentication(Configuration);
             services.ConfigureSwagger();
         }
 

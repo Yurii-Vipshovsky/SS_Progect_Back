@@ -1,11 +1,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using SoftServe_BackEnd.Database;
 using SoftServe_BackEnd.Helpers;
 using SoftServe_BackEnd.Models;
@@ -13,19 +11,15 @@ using SoftServe_BackEnd.Services;
 
 namespace SoftServe_BackEnd.Controllers
 {
+    //[Authorize]
     [Route("/[controller]")]
     public class EventController : Controller
     {
         private DatabaseContext _context;
-        private readonly IConfiguration _configuration;
-        private readonly UserManager<User> _userManager;
-        private readonly SignInManager<User> _signinManager;
-        public EventController(UserManager<User> userManager, SignInManager<User> signinManager,
-            IConfiguration configuration,DatabaseContext context)
+        //private readonly UserManager<Client> _userManager;
+        public EventController(DatabaseContext context)
         {
-            _userManager = userManager;
-            _signinManager = signinManager;
-            _configuration = configuration;
+            //_userManager = userManager;
             _context = context;
         }
 
@@ -84,13 +78,13 @@ namespace SoftServe_BackEnd.Controllers
 
             var currentEvent = await _context.Events.FindAsync(id);
             return Ok(new Response<Event>(currentEvent));
-            ;
         }
 
         [HttpPost]
         public async Task<ActionResult<Event>> PostEvent([FromBody]Event newEvent)
         {
-            newEvent.CreatedBy = await _userManager.FindByNameAsync(User.Identity?.Name);
+            newEvent.CreatedBy = "tmp@gmail.com";
+                /*(await _userManager.FindByNameAsync(User.Identity?.Name)).Email;*/
             await _context.Events.AddAsync(newEvent);
             await _context.SaveChangesAsync();
             return CreatedAtAction(nameof(GetEvent), new { id = newEvent.Id }, newEvent);

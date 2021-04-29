@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using SoftServe_BackEnd.Database;
@@ -19,13 +20,13 @@ namespace SoftServe_BackEnd
         /// <summary>
         /// Configures Entity Framework DbContext for the project.
         /// </summary>
-        public static void ConfigureEntityFramework(this IServiceCollection services, 
+        public static void ConfigureEntityFramework(this IServiceCollection services,
             IConfiguration configuration)
-        {   
+        {
             services.AddDbContext<DatabaseContext>(opt =>
                 opt.UseNpgsql(configuration.GetConnectionString("DefaultConnection")));
         }
-        
+
         /// <summary>
         /// Configures JSON Web Token authentication scheme.
         /// </summary>
@@ -49,16 +50,21 @@ namespace SoftServe_BackEnd
                 });
             services.AddAuthorization();
         }
-        
+
         public static void ConfigureIdentity(this IServiceCollection services)
         {
-            services.AddIdentity<User, IdentityRole>().AddEntityFrameworkStores<DatabaseContext>();
+            //services.TryAddScoped<UserManager<Client>>();
+            //services.AddScoped<Client, Client>();
+
+            //services.AddIdentity<Client, IdentityRole>().AddEntityFrameworkStores<DatabaseContext>();
         }
 
         public static void ConfigureSwagger(this IServiceCollection services)
         {
             services.AddSwaggerGen(c =>
             {
+                //c.AddSecurityDefinition("");
+
                 c.SwaggerDoc("v1", new OpenApiInfo
                 {
                     Title = "SoftServe_BackEnd",
@@ -70,6 +76,5 @@ namespace SoftServe_BackEnd
                 c.IncludeXmlComments(xmlPath);
             });
         }
-
     }
 }
