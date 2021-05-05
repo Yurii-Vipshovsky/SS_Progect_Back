@@ -5,7 +5,7 @@ using SoftServe_BackEnd.Models;
 
 namespace SoftServe_BackEnd.Database
 {
-    public class DatabaseContext : DbContext
+    public class DatabaseContext: DbContext
     {
         public DatabaseContext()
         {
@@ -29,7 +29,12 @@ namespace SoftServe_BackEnd.Database
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.HasPostgresEnum(null, "type_of_volonteer", new[] { "eco", "zoo", "phone", "intelectual", "school", "homeless", "families", "inclusive", "culture", "medecine" })
+            modelBuilder.HasPostgresEnum(null, "type_of_volonteer",
+                    new[]
+                    {
+                        "eco", "zoo", "phone", "intelectual", "school", "homeless", "families", "inclusive", "culture",
+                        "medecine"
+                    })
                 .HasAnnotation("Relational:Collation", "English_United States.1252");
 
             modelBuilder.Entity<Client>(entity =>
@@ -112,8 +117,6 @@ namespace SoftServe_BackEnd.Database
                     .HasForeignKey(d => d.CreatedBy)
                     .HasConstraintName("event_createdby_fkey");
             });
-
         }
-        
     }
 }

@@ -53,10 +53,7 @@ namespace SoftServe_BackEnd
 
         public static void ConfigureIdentity(this IServiceCollection services)
         {
-            //services.TryAddScoped<UserManager<Client>>();
-            //services.AddScoped<Client, Client>();
-
-            //services.AddIdentity<Client, IdentityRole>().AddEntityFrameworkStores<DatabaseContext>();
+            services.AddIdentity<Client, IdentityRole>().AddEntityFrameworkStores<DatabaseContext>();
         }
 
         public static void ConfigureSwagger(this IServiceCollection services)

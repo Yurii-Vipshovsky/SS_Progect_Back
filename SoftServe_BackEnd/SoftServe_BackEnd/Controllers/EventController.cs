@@ -11,15 +11,12 @@ using SoftServe_BackEnd.Services;
 
 namespace SoftServe_BackEnd.Controllers
 {
-    //[Authorize]
     [Route("/[controller]")]
     public class EventController : Controller
     {
         private DatabaseContext _context;
-        //private readonly UserManager<Client> _userManager;
         public EventController(DatabaseContext context)
         {
-            //_userManager = userManager;
             _context = context;
         }
 
@@ -83,8 +80,7 @@ namespace SoftServe_BackEnd.Controllers
         [HttpPost]
         public async Task<ActionResult<Event>> PostEvent([FromBody]Event newEvent)
         {
-            newEvent.CreatedBy = "tmp@gmail.com";
-                /*(await _userManager.FindByNameAsync(User.Identity?.Name)).Email;*/
+            newEvent.CreatedByNavigation = await _context.Clients.FindAsync(newEvent.CreatedBy);
             await _context.Events.AddAsync(newEvent);
             await _context.SaveChangesAsync();
             return CreatedAtAction(nameof(GetEvent), new { id = newEvent.Id }, newEvent);
