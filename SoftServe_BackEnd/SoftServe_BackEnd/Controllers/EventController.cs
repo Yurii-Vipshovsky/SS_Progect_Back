@@ -1,7 +1,7 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SoftServe_BackEnd.Database;
@@ -78,23 +78,30 @@ namespace SoftServe_BackEnd.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<Event>> PostEvent([FromBody]Event newEvent)
+        public async Task<ActionResult<Event>> PostEvent([FromBody]CreateEvent eventInfo)
         {
-            newEvent.CreatedByNavigation = await _context.Clients.FindAsync(newEvent.CreatedBy);
+            var newEvent = new Event
+            {
+                CreatedBy = eventInfo.CreatedBy,
+                CreatedByNavigation = _context.Clients.FirstOrDefault(
+                    clientModel => clientModel.Email == eventInfo.CreatedBy
+                ),
+                Date = DateTime.Now,
+                Description = eventInfo.Description,
+                Name = eventInfo.Name,
+                Place = eventInfo.Place,
+                Type = eventInfo.Type
+
+            };
             await _context.Events.AddAsync(newEvent);
             await _context.SaveChangesAsync();
-            return CreatedAtAction(nameof(GetEvent), new { id = newEvent.Id }, newEvent);
+            return Ok(new Response<CreateEvent>(eventInfo));
         }
         
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutEvent(int id, Event currentEvent)
+        public async Task<IActionResult> PutEvent(int id, [FromBody]Event eventInfo)
         {
-            if (id != currentEvent.Id)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(currentEvent).State = EntityState.Modified;
+            _context.Entry(eventInfo).State = EntityState.Modified;
             try
             {
                 await _context.SaveChangesAsync();
@@ -108,7 +115,7 @@ namespace SoftServe_BackEnd.Controllers
                 throw;
             }
 
-            return Ok(new Response<Event>(currentEvent));
+            return Ok(new Response<Event>(eventInfo));
         }
         
         [HttpDelete("{id}")]

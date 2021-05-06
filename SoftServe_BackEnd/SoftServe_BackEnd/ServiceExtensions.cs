@@ -60,8 +60,6 @@ namespace SoftServe_BackEnd
         {
             services.AddSwaggerGen(c =>
             {
-                //c.AddSecurityDefinition("");
-
                 c.SwaggerDoc("v1", new OpenApiInfo
                 {
                     Title = "SoftServe_BackEnd",

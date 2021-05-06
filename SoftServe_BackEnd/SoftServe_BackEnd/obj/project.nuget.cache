@@ -1,9 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "IwGdK1eIHG3zQq2XGU9NEorttGqG3J8bzDCgWM0Y0iourGLHlmZHyC3Hf3XWcWFD25VCJ4bQZx4zH3hefoq2fA==",
+  "dgSpecHash": "pUtaKq4ycZKI/VFP2eXJd24/ipmry8qDzhLLFcQM7DEFTaqJM6RCBZSVopsEJXlqxKDq4cJufnAJZv21EsAe7Q==",
   "success": true,
   "projectFilePath": "D:\\Projects\\SoftServe\\SS_Progect_Back\\SoftServe_BackEnd\\SoftServe_BackEnd\\SoftServe_BackEnd.csproj",
   "expectedPackageFiles": [
+    "C:\\Users\\Arsen\\.nuget\\packages\\bcrypt.net-next\\4.0.0\\bcrypt.net-next.4.0.0.nupkg.sha512",
     "C:\\Users\\Arsen\\.nuget\\packages\\humanizer.core\\2.8.26\\humanizer.core.2.8.26.nupkg.sha512",
     "C:\\Users\\Arsen\\.nuget\\packages\\microsoft.aspnetcore.authentication.jwtbearer\\5.0.1\\microsoft.aspnetcore.authentication.jwtbearer.5.0.1.nupkg.sha512",
     "C:\\Users\\Arsen\\.nuget\\packages\\microsoft.aspnetcore.authentication.openidconnect\\5.0.1\\microsoft.aspnetcore.authentication.openidconnect.5.0.1.nupkg.sha512",

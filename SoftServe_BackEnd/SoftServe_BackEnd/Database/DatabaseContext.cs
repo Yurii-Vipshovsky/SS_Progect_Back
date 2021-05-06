@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Npgsql;
 using SoftServe_BackEnd.Models;
 
 #nullable disable
@@ -7,9 +8,8 @@ namespace SoftServe_BackEnd.Database
 {
     public class DatabaseContext: DbContext
     {
-        public DatabaseContext()
-        {
-        }
+
+        static DatabaseContext() => NpgsqlConnection.GlobalTypeMapper.MapEnum<TypeOfVolunteer>("type_of_volunteer");
 
         public DatabaseContext(DbContextOptions<DatabaseContext> options)
             : base(options)
@@ -26,10 +26,9 @@ namespace SoftServe_BackEnd.Database
                 optionsBuilder.UseNpgsql("User ID=postgres;Password=arsen_postgres;Server=localhost;Port=2000;Database=SSDatabase;");
             }
         }
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.HasPostgresEnum(null, "type_of_volonteer",
+            modelBuilder.HasPostgresEnum(null, "type_of_volunteer",
                     new[]
                     {
                         "eco", "zoo", "phone", "intelectual", "school", "homeless", "families", "inclusive", "culture",
@@ -61,7 +60,8 @@ namespace SoftServe_BackEnd.Database
                     .HasMaxLength(50)
                     .HasColumnName("email");
 
-                entity.Property(e => e.IsOrganization).HasColumnName("is_organization");
+                entity.Property(e => e.IsOrganization)
+                    .HasColumnName("is_organization");
 
                 entity.Property(e => e.Name)
                     .IsRequired()
@@ -70,7 +70,7 @@ namespace SoftServe_BackEnd.Database
 
                 entity.Property(e => e.Password)
                     .IsRequired()
-                    .HasMaxLength(50)
+                    .HasMaxLength(100)
                     .HasColumnName("password");
 
                 entity.Property(e => e.PhoneNumber)
@@ -111,7 +111,12 @@ namespace SoftServe_BackEnd.Database
                     .IsRequired()
                     .HasMaxLength(100)
                     .HasColumnName("place");
-
+                
+                entity.Property(e => e.Type)
+                    .HasMaxLength(50)
+                    .IsRequired()
+                    .HasColumnName("type");
+                
                 entity.HasOne(d => d.CreatedByNavigation)
                     .WithMany(p => p.Events)
                     .HasForeignKey(d => d.CreatedBy)
