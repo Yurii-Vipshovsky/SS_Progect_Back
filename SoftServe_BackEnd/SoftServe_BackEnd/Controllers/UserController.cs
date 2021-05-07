@@ -1,15 +1,16 @@
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
 using System.Security.Claims;
+using System.Security.Policy;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using SoftServe_BackEnd.Database;
 using SoftServe_BackEnd.Models;
 using SoftServe_BackEnd.Services;
 
@@ -18,26 +19,22 @@ namespace SoftServe_BackEnd.Controllers
     [Route("/[controller]")]
     public class UserController : Controller
     {
-        private readonly UserManager<User> _userManager;
-        private readonly SignInManager<User> _signinManager;
+        private readonly DatabaseContext _context;
         private readonly IConfiguration _configuration;
-        
-        public UserController(UserManager<User> userManager, SignInManager<User> signinManager,
-            IConfiguration configuration)
+
+        public UserController(DatabaseContext context, IConfiguration configuration)
         {
-            _userManager = userManager;
-            _signinManager = signinManager;
             _configuration = configuration;
+            _context = context;
         }
-        
-        [AllowAnonymous]
+
         [HttpPost("register")]
-        public async Task<IActionResult> Register(RegisterUser userModel)
+        public async Task<IActionResult> Register([FromBody] RegisterUser userModel)
         {
-            var emailIsBusy = await _userManager.FindByEmailAsync(userModel.Email);
+            var emailIsBusy = FindClientByEmail(userModel.Email);
             if (emailIsBusy != null)
             {
-                return StatusCode(StatusCodes.Status409Conflict, new Response<User>
+                return StatusCode(StatusCodes.Status409Conflict, new Response<Client>
                 {
                     Message = "Error",
                     Errors = new[] {"Email is already used"},
@@ -46,58 +43,34 @@ namespace SoftServe_BackEnd.Controllers
                 });
             }
 
-            var nickIsBusy = await _userManager.FindByNameAsync(userModel.NickName);
-            if (nickIsBusy != null)
+            var user = new Client
             {
-                return StatusCode(StatusCodes.Status409Conflict, new Response<User>
-                {
-                    Message = "Error",
-                    Errors = new[] {"Login name is already used"},
-                    Succeeded = false,
-                    Data = null
-                });
-            }
-            
-            var user = new User
-            {
-                UserName = userModel.NickName,
+                Login = userModel.NickName,
                 Email = userModel.Email,
-                FullName = userModel.FullName,
-                Birthday =  userModel.Birthday,
-                City =  userModel.City,
+                Name = userModel.FullName,
+                Birthday = userModel.Birthday,
+                City = userModel.City,
                 PhoneNumber = userModel.PhoneNumber,
                 IsOrganization = userModel.IsOrganization,
-                SiteUrl = userModel.SiteUrl,
-                SecurityStamp = Guid.NewGuid().ToString()
+                Site = userModel.SiteUrl,
+                Password = BCrypt.Net.BCrypt.HashPassword(userModel.Password)
             };
             
-            var result = await _userManager.CreateAsync(user, userModel.Password);
-            if (!result.Succeeded)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, new Response<User>
-                {
-                    Message = "Error",
-                    Errors = new[] {"Something wrong"},
-                    Succeeded = false,
-                    Data = null
-                });
-            }
-
-            await _signinManager.SignInAsync(user, false);
-            return Ok(new Response<User>
+            await _context.Clients.AddAsync(user);
+            await _context.SaveChangesAsync();
+            return Ok(new Response<Client>
             {
                 Message = "User created successfully",
                 Data = user
             });
         }
-        
+
         [HttpPost("login")]
-        public async Task<IActionResult> Login(LoginUser userModel)
+        public async Task<IActionResult> Login([FromBody] LoginUser userModel)
         {
-            var checkByEmail = await _userManager.FindByEmailAsync(userModel.LoginString);
-            var checkByNickName = await _userManager.FindByNameAsync(userModel.LoginString);
+            var currentUser = FindClientByEmail(userModel.LoginString);
             if (!ModelState.IsValid)
-                return StatusCode(StatusCodes.Status404NotFound, new Response<User>
+                return StatusCode(StatusCodes.Status404NotFound, new Response<Client>
                 {
                     Message = "Error",
                     Errors = new[] {"Incorrect data"},
@@ -105,9 +78,9 @@ namespace SoftServe_BackEnd.Controllers
                     Data = null
                 });
 
-            if (checkByEmail == null && checkByNickName == null)
+            if (currentUser == null)
             {
-                return StatusCode(StatusCodes.Status404NotFound, new Response<User>
+                return StatusCode(StatusCodes.Status404NotFound, new Response<Client>
                 {
                     Message = "Error",
                     Errors = new[] {"User is not found"},
@@ -116,15 +89,13 @@ namespace SoftServe_BackEnd.Controllers
                 });
             }
 
-            var currentUser = checkByEmail ?? checkByNickName;
-            var signInResult =
-                await _signinManager.PasswordSignInAsync(currentUser.UserName, userModel.Password, true, false);
-            
-            if (!signInResult.Succeeded)
-                return StatusCode(StatusCodes.Status404NotFound, new Response<User>
+            var signInResult = BCrypt.Net.BCrypt.Verify(userModel.Password, currentUser.Password);
+
+            if (!signInResult)
+                return StatusCode(StatusCodes.Status404NotFound, new Response<Client>
                 {
                     Message = "Error",
-                    Errors = new[] {"Email/NickName or password wrong"},
+                    Errors = new[] {"Email or password wrong"},
                     Succeeded = false,
                     Data = null
                 });
@@ -137,34 +108,39 @@ namespace SoftServe_BackEnd.Controllers
                 Message = "Success"
             });
         }
-        
+
         [HttpPost("logout")]
         public async Task<IActionResult> Logout()
         {
-            await _signinManager.SignOutAsync();
-            return StatusCode(StatusCodes.Status200OK, new Response<User>
+            return StatusCode(StatusCodes.Status200OK, new Response<Client>
             {
                 Message = "Successful logout",
                 Succeeded = true,
                 Data = null
             });
         }
-        
-        private SecurityToken GenerateJsonWebToken(LoginUser userInfo)  
-        {  
+
+        private SecurityToken GenerateJsonWebToken(LoginUser userInfo)
+        {
             var secretKey = new SymmetricSecurityKey(
                 Encoding.UTF8.GetBytes(_configuration.GetSection("Authentication:JWT:SecurityKey").Value));
             var signIn = new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256);
 
             var tokenOptions = new JwtSecurityToken(
-                issuer: _configuration.GetSection("Authentication:JWT:Issuer").Value,
-                audience: _configuration.GetSection("Authentication:JWT:Audience").Value,
-                claims: new List<Claim>(),
+                _configuration.GetSection("Authentication:JWT:Issuer").Value,
+                _configuration.GetSection("Authentication:JWT:Audience").Value,
+                new List<Claim>(),
                 expires: DateTime.Now.AddMinutes(30),
                 signingCredentials: signIn
             );
 
             return tokenOptions;
+        }
+        
+        private Client FindClientByEmail(string email)
+        {
+            var client = _context.Clients.FirstOrDefault(clientModel => clientModel.Email == email);
+            return client;
         }
     }
 }

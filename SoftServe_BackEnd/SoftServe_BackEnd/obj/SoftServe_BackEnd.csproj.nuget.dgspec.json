@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\norbe\\Desktop\\SoftServe\\SS_Progect_Back\\SoftServe_BackEnd\\SoftServe_BackEnd\\SoftServe_BackEnd.csproj": {}
+    "D:\\Projects\\SoftServe\\SS_Progect_Back\\SoftServe_BackEnd\\SoftServe_BackEnd\\SoftServe_BackEnd.csproj": {}
   },
   "projects": {
-    "C:\\Users\\norbe\\Desktop\\SoftServe\\SS_Progect_Back\\SoftServe_BackEnd\\SoftServe_BackEnd\\SoftServe_BackEnd.csproj": {
+    "D:\\Projects\\SoftServe\\SS_Progect_Back\\SoftServe_BackEnd\\SoftServe_BackEnd\\SoftServe_BackEnd.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\norbe\\Desktop\\SoftServe\\SS_Progect_Back\\SoftServe_BackEnd\\SoftServe_BackEnd\\SoftServe_BackEnd.csproj",
+        "projectUniqueName": "D:\\Projects\\SoftServe\\SS_Progect_Back\\SoftServe_BackEnd\\SoftServe_BackEnd\\SoftServe_BackEnd.csproj",
         "projectName": "SoftServe_BackEnd",
-        "projectPath": "C:\\Users\\norbe\\Desktop\\SoftServe\\SS_Progect_Back\\SoftServe_BackEnd\\SoftServe_BackEnd\\SoftServe_BackEnd.csproj",
-        "packagesPath": "C:\\Users\\norbe\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\norbe\\Desktop\\SoftServe\\SS_Progect_Back\\SoftServe_BackEnd\\SoftServe_BackEnd\\obj\\",
+        "projectPath": "D:\\Projects\\SoftServe\\SS_Progect_Back\\SoftServe_BackEnd\\SoftServe_BackEnd\\SoftServe_BackEnd.csproj",
+        "packagesPath": "C:\\Users\\Arsen\\.nuget\\packages\\",
+        "outputPath": "D:\\Projects\\SoftServe\\SS_Progect_Back\\SoftServe_BackEnd\\SoftServe_BackEnd\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\norbe\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Arsen\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -40,19 +40,17 @@
         "net5.0": {
           "targetAlias": "net5.0",
           "dependencies": {
+            "BCrypt.Net-Next": {
+              "target": "Package",
+              "version": "[4.0.0, )"
+            },
             "Microsoft.AspNetCore.Authentication.JwtBearer": {
               "target": "Package",
-              "version": "[5.0.1, )",
-              "noWarn": [
-                "NU1605"
-              ]
+              "version": "[5.0.1, )"
             },
             "Microsoft.AspNetCore.Authentication.OpenIdConnect": {
               "target": "Package",
-              "version": "[5.0.1, )",
-              "noWarn": [
-                "NU1605"
-              ]
+              "version": "[5.0.1, )"
             },
             "Microsoft.AspNetCore.Identity.EntityFrameworkCore": {
               "target": "Package",
@@ -67,10 +65,6 @@
               "suppressParent": "All",
               "target": "Package",
               "version": "[5.0.2, )"
-            },
-            "Moq": {
-              "target": "Package",
-              "version": "[4.16.1, )"
             },
             "Npgsql": {
               "target": "Package",
@@ -103,7 +97,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Users\\norbe\\.dotnet\\sdk\\5.0.103\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.101\\RuntimeIdentifierGraph.json"
         }
       }
     }

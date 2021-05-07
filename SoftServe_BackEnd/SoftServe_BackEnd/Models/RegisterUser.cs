@@ -6,31 +6,31 @@ namespace SoftServe_BackEnd.Models
     public class RegisterUser
     {
         [Required]
-        public string NickName;
+        public string NickName{ get; set; }
         
         [Required]
         [EmailAddress]
-        public string Email;
+        public string Email{ get; set; }
         
         [Required]
-        public string FullName;
+        public string FullName{ get; set; }
         
         [Required]
-        public DateTime Birthday;
+        public DateTime Birthday{ get; set; }
         
         [Required]
-        public string City;
+        public string City{ get; set; }
         
         [Required]
-        public string Password;
+        public string Password{ get; set; }
 
         [Required]
-        public string PhoneNumber;
+        public string PhoneNumber{ get; set; }
         
         [Required] 
-        public bool IsOrganization;
+        public bool IsOrganization{ get; set; }
         
         [MaxLength(50)]
-        public string SiteUrl;
+        public string SiteUrl{ get; set; }
     }
 }
