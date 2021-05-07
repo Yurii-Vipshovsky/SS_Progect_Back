@@ -63,7 +63,7 @@ namespace SoftServe_BackEnd
                 var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
 
-                c.IncludeXmlComments(xmlPath);
+                // c.IncludeXmlComments(xmlPath);
             });
         }
 
