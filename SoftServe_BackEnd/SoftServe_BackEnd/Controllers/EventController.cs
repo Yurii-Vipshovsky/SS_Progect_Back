@@ -31,7 +31,7 @@ namespace SoftServe_BackEnd.Controllers
             
             var resultList = new List<Event>();
 
-            if (search != null)
+            if (search != null)     
                 await foreach (var currentEvent in _context.Events)
                 {
                     if (currentEvent.ToString().Contains(search))
