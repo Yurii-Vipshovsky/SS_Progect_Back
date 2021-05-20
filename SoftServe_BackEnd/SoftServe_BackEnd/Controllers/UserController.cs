@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
-using System.Security.Policy;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
@@ -68,7 +67,7 @@ namespace SoftServe_BackEnd.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginUser userModel)
         {
-            var currentUser = FindClientByEmail(userModel.LoginString);
+            var currentUser = FindClientByEmail(userModel.Email);
             if (!ModelState.IsValid)
                 return StatusCode(StatusCodes.Status404NotFound, new Response<Client>
                 {
@@ -129,7 +128,9 @@ namespace SoftServe_BackEnd.Controllers
             var tokenOptions = new JwtSecurityToken(
                 _configuration.GetSection("Authentication:JWT:Issuer").Value,
                 _configuration.GetSection("Authentication:JWT:Audience").Value,
-                new List<Claim>(),
+                new List<Claim>{
+                    new(JwtRegisteredClaimNames.Sub, userInfo.Email)
+                },
                 expires: DateTime.Now.AddMinutes(30),
                 signingCredentials: signIn
             );

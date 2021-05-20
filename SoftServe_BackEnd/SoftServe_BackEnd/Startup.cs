@@ -21,8 +21,7 @@ namespace SoftServe_BackEnd
             services.AddHttpContextAccessor();
             services.AddControllers();
             services.ConfigureEntityFramework(Configuration);
-            //services.ConfigureIdentity();
-            //services.ConfigureJwtAuthentication(Configuration);
+            services.ConfigureJwtAuthentication(Configuration);
             services.ConfigureSwagger();
         }
 

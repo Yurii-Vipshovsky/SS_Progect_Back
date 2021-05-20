@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SoftServe_BackEnd.Database;
@@ -11,10 +13,12 @@ using SoftServe_BackEnd.Services;
 
 namespace SoftServe_BackEnd.Controllers
 {
-    [Route("/[controller]")]
+    [Authorize]
+    [ApiController]
+    [Route("/api/[controller]")]
     public class EventController : Controller
     {
-        private DatabaseContext _context;
+        private readonly DatabaseContext _context;
         public EventController(DatabaseContext context)
         {
             _context = context;
@@ -80,11 +84,12 @@ namespace SoftServe_BackEnd.Controllers
         [HttpPost]
         public async Task<ActionResult<Event>> PostEvent([FromBody]CreateEvent eventInfo)
         {
+            var emailOfCurrentUser = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var newEvent = new Event
             {
-                CreatedBy = eventInfo.CreatedBy,
+                CreatedBy = emailOfCurrentUser,
                 CreatedByNavigation = _context.Clients.FirstOrDefault(
-                    clientModel => clientModel.Email == eventInfo.CreatedBy
+                    clientModel => clientModel.Email == emailOfCurrentUser
                 ),
                 Date = DateTime.Now,
                 Description = eventInfo.Description,
