@@ -66,6 +66,10 @@
               "target": "Package",
               "version": "[5.0.2, )"
             },
+            "Moq": {
+              "target": "Package",
+              "version": "[4.16.1, )"
+            },
             "Npgsql": {
               "target": "Package",
               "version": "[5.0.2, )"

@@ -2,7 +2,7 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SoftServe_BackEnd", "SoftServe_BackEnd\SoftServe_BackEnd.csproj", "{8CD92AF7-79C3-41C1-8351-03F0C55E99E8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VolunteerTest", "VolunteerTest\VolunteerTest.csproj", "{6860FF97-B278-4BA4-A53F-D4E1A2FF002E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SoftServe_BackEndTest", "SoftServe_BackEndTest\SoftServe_BackEndTest.csproj", "{A57B6E65-6BF1-4FCB-8111-38CC5F5113DD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -14,9 +14,9 @@ Global
 		{8CD92AF7-79C3-41C1-8351-03F0C55E99E8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8CD92AF7-79C3-41C1-8351-03F0C55E99E8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8CD92AF7-79C3-41C1-8351-03F0C55E99E8}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6860FF97-B278-4BA4-A53F-D4E1A2FF002E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6860FF97-B278-4BA4-A53F-D4E1A2FF002E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6860FF97-B278-4BA4-A53F-D4E1A2FF002E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6860FF97-B278-4BA4-A53F-D4E1A2FF002E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A57B6E65-6BF1-4FCB-8111-38CC5F5113DD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A57B6E65-6BF1-4FCB-8111-38CC5F5113DD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A57B6E65-6BF1-4FCB-8111-38CC5F5113DD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A57B6E65-6BF1-4FCB-8111-38CC5F5113DD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
