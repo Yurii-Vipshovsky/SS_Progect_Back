@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using SoftServe_BackEnd;
-using SoftServe_BackEnd.Controllers;
 using SoftServe_BackEnd.Database;
 using SoftServe_BackEnd.Models;
 
@@ -33,6 +33,8 @@ namespace VolunteerTest
                     {
                         services.Remove(descriptor);
                     }
+
+                    services.RemoveAll(typeof(DatabaseContext));
                     
                     if (mode == "InMemory")
                     {
@@ -59,36 +61,35 @@ namespace VolunteerTest
             });
             TestClient = appFactory.CreateClient();
         }
+
         protected async Task<JObject> GetPageResponse(Task<HttpResponseMessage> response)
         {
-            var pageResponse =  JsonConvert.DeserializeObject(await response.Result.Content.ReadAsStringAsync());
+            var pageResponse =  await JsonConvert.DeserializeObjectAsync(await response.Result.Content.ReadAsStringAsync());
             var jsonResponse = (JObject) pageResponse;
             return jsonResponse;
         }
         
-        protected async Task<Event> CreatePostAsync(Event events)
+        protected Task<Event> CreatePostAsync(Event events)
         {
-            var response = await TestClient.PostAsJsonAsync("api/Event", events);
-            return await response.Content.ReadFromJsonAsync<Event>();
-            //return await response.Content.ReadAsAsync<Event>();
+            var response = TestClient.PostAsJsonAsync("api/Event", events).Result;
+            return response.Content.ReadAsAsync<Event>();
         }
         
-        protected Event GetNewEvent(int id = 1, string createdBy = "createdBy", string name = "name", 
-            string place = "plase", string description = "description",
-            DateTime date = default, TypeOfVolunteer type = TypeOfVolunteer.Eco, Client client = default)
-        {
-            var events = new Event
-            {
-                Id = id,
-                CreatedBy = createdBy,
-                Name = name,
-                Place = place,
-                Description = description,
-                Date = date,
-                Type = type,
-                CreatedByNavigation = client
-            };
-            return events;
-        }
+        protected static Event GetNewEvent(int id = 1, string createdBy = "createdBy", string name = "name", 
+             string place = "place", string description = "description",
+             DateTime date = default, TypeOfVolunteer type = TypeOfVolunteer.Eco, Client client = default)
+         {
+             return new()
+             {
+                 Id = id,
+                 CreatedBy = createdBy,
+                 Name = name,
+                 Place = place,
+                 Description = description,
+                 Date = date,
+                 Type = type,
+                 CreatedByNavigation = client
+             };
+         }
     }
 }
