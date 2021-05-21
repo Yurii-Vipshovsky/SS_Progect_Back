@@ -13,7 +13,6 @@ using SoftServe_BackEnd.Services;
 
 namespace SoftServe_BackEnd.Controllers
 {
-    [Authorize]
     [ApiController]
     [Route("/api/[controller]")]
     public class EventController : Controller
@@ -84,14 +83,15 @@ namespace SoftServe_BackEnd.Controllers
         [HttpPost]
         public async Task<ActionResult<Event>> PostEvent([FromBody]CreateEvent eventInfo)
         {
-            var emailOfCurrentUser = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            //var emailOfCurrentUser = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var emailOfCurrentUser = "user@example.com";
             var newEvent = new Event
             {
                 CreatedBy = emailOfCurrentUser,
                 CreatedByNavigation = _context.Clients.FirstOrDefault(
                     clientModel => clientModel.Email == emailOfCurrentUser
                 ),
-                Date = DateTime.Now,
+                Date = eventInfo.CarryingOutTime,
                 Description = eventInfo.Description,
                 Name = eventInfo.Name,
                 Place = eventInfo.Place,

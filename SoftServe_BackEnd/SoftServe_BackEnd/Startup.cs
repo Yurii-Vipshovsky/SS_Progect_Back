@@ -23,11 +23,17 @@ namespace SoftServe_BackEnd
             services.ConfigureEntityFramework(Configuration);
             services.ConfigureJwtAuthentication(Configuration);
             services.ConfigureSwagger();
+            services.AddCors();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.UseCors(options =>
+                options.WithOrigins("http://localhost:3000")
+                    .AllowAnyHeader()
+                    .AllowAnyMethod());
+            
             app.UseDeveloperExceptionPage();
             app.UseSwagger();
             app.UseSwaggerUI(c =>

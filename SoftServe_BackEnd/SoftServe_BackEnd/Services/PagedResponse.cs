@@ -2,10 +2,10 @@ namespace SoftServe_BackEnd.Services
 {
     public class PagedResponse<T>: Response<T>
     {
-        public int PageNumber;
-        public int PageSize;
-        public int TotalPages;
-        public int TotalRecords;
+        public int PageNumber { get; set; }
+        public int PageSize { get; set; }
+        public int TotalPages { get; set; }
+        public int TotalRecords { get; set; }
 
         public PagedResponse(T data, int pageNumber, int pageSize)
         {

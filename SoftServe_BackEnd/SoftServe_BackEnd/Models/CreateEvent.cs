@@ -1,3 +1,5 @@
+using System;
+
 namespace SoftServe_BackEnd.Models
 {
     public class CreateEvent
@@ -6,5 +8,7 @@ namespace SoftServe_BackEnd.Models
         public string Place { get; set; }
         public string Description { get; set; }
         public TypeOfVolunteer Type { get; set; }
+        
+        public DateTime CarryingOutTime { get; set; }
     }
 }

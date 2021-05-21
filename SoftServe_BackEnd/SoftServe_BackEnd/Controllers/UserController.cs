@@ -15,7 +15,7 @@ using SoftServe_BackEnd.Services;
 
 namespace SoftServe_BackEnd.Controllers
 {
-    [Route("/[controller]")]
+    [Route("/api/[controller]")]
     public class UserController : Controller
     {
         private readonly DatabaseContext _context;
