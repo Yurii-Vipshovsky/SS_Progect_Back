@@ -5,6 +5,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -26,6 +27,18 @@ namespace SoftServe_BackEnd.Controllers
             _configuration = configuration;
             _context = context;
         }
+
+    [HttpGet]
+    [Authorize]
+    public async Task<IActionResult> GetUser()
+    {
+        var emailOfCurrentUser = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        var currentUser = _context.Clients.FirstOrDefault(
+            clientModel => clientModel.Email == emailOfCurrentUser
+            );
+        return Ok(new Response<Client>(currentUser));
+    }
 
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegisterUser userModel)

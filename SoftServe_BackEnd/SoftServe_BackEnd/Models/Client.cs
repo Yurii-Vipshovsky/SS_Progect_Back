@@ -10,6 +10,7 @@ namespace SoftServe_BackEnd.Models
         public Client()
         {
             Events = new HashSet<Event>();
+            Orders = new HashSet<Order>();
         }
 
         public string Login { get; set; }
@@ -21,7 +22,8 @@ namespace SoftServe_BackEnd.Models
         public string PhoneNumber { get; set; }
         public bool IsOrganization { get; set; }
         public string Site { get; set; }
-
+        
         public virtual ICollection<Event> Events { get; set; }
+        public virtual ICollection<Order> Orders { get; set; }
     }
 }

@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 #nullable disable
 
@@ -13,6 +15,13 @@ namespace SoftServe_BackEnd.Models
         public string Description { get; set; }
         public DateTime? Date { get; set; }
         public TypeOfVolunteer Type { get; set; }
-        public virtual Client CreatedByNavigation { get; set; }
+        public Client CreatedByNavigation;
+        public ICollection<Order> Orders;
+        
+        [NotMapped]
+        public string StringType
+        {
+            get => Type.ToString();
+        }
     }
 }

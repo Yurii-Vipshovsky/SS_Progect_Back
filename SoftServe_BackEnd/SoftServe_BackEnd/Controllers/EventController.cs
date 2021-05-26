@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
@@ -81,10 +80,10 @@ namespace SoftServe_BackEnd.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public async Task<ActionResult<Event>> PostEvent([FromBody]CreateEvent eventInfo)
         {
-            //var emailOfCurrentUser = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var emailOfCurrentUser = "user@example.com";
+            var emailOfCurrentUser = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var newEvent = new Event
             {
                 CreatedBy = emailOfCurrentUser,
@@ -104,6 +103,7 @@ namespace SoftServe_BackEnd.Controllers
         }
         
         [HttpPut("{id}")]
+        [Authorize]
         public async Task<IActionResult> PutEvent(int id, [FromBody]Event eventInfo)
         {
             _context.Entry(eventInfo).State = EntityState.Modified;
@@ -124,6 +124,7 @@ namespace SoftServe_BackEnd.Controllers
         }
         
         [HttpDelete("{id}")]
+        [Authorize]
         public async Task<IActionResult> DeleteEvent(int id)
         {
             var currentEvent = await _context.Events.FindAsync(id);

@@ -5,12 +5,12 @@ namespace SoftServe_BackEnd
         Zoo = 1,
         Eco = 2,
         Phone = 3,
-        Intelectual = 4,
+        Intellectual = 4,
         School = 5,
         Homeless = 6,
         Families = 7,
         Inclusive = 8,
         Culture = 9,
-        Medecine = 10
+        Medicine = 10
     }
 }

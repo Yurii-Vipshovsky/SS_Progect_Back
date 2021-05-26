@@ -18,6 +18,8 @@ namespace SoftServe_BackEnd.Database
 
         public virtual DbSet<Client> Clients { get; set; }
         public virtual DbSet<Event> Events { get; set; }
+        public virtual DbSet<Order> Orders { get; set; }
+
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -31,8 +33,8 @@ namespace SoftServe_BackEnd.Database
             modelBuilder.HasPostgresEnum(null, "type_of_volunteer",
                     new[]
                     {
-                        "eco", "zoo", "phone", "intelectual", "school", "homeless", "families", "inclusive", "culture",
-                        "medecine"
+                        "eco", "zoo", "phone", "intellectual", "school", "homeless", "families", "inclusive", "culture",
+                        "medicine"
                     })
                 .HasAnnotation("Relational:Collation", "English_United States.1252");
 
@@ -121,6 +123,32 @@ namespace SoftServe_BackEnd.Database
                     .WithMany(p => p.Events)
                     .HasForeignKey(d => d.CreatedBy)
                     .HasConstraintName("event_createdby_fkey");
+            });
+            
+            modelBuilder.Entity<Order>(entity =>
+            {
+                entity.ToTable("order");
+
+                entity.Property(e => e.OrderId).HasColumnName("order_id");
+
+                entity.Property(e => e.EventId).HasColumnName("event_id");
+
+                entity.Property(e => e.UserLogin)
+                    .IsRequired()
+                    .HasColumnType("character varying")
+                    .HasColumnName("user_login");
+
+                entity.HasOne(d => d.Event)
+                    .WithMany(p => p.Orders)
+                    .HasForeignKey(d => d.EventId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("order_event_id_fkey");
+
+                entity.HasOne(d => d.UserLoginNavigation)
+                    .WithMany(p => p.Orders)
+                    .HasForeignKey(d => d.UserLogin)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("order_user_login_fkey");
             });
         }
     }
