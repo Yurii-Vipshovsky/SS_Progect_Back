@@ -1,5 +1,7 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -12,26 +14,27 @@ using SoftServe_BackEnd.Services;
 namespace SoftServe_BackEnd.Controllers
 {
     [Authorize]
-    [Route("/[controller]")]
+    [ApiController]
+    [Route("/api/[controller]")]
     public class EventController : Controller
     {
-        private DatabaseContext _context;
-
+        private readonly DatabaseContext _context;
         public EventController(DatabaseContext context)
         {
             _context = context;
         }
-        
+
         [HttpGet]
         public async Task<IActionResult> GetEvents(
-            [FromQuery] PaginationFilter filter,[FromQuery]string sortBy, [FromQuery]string search, [FromQuery]string order="asc")
+            [FromQuery] PaginationFilter filter, [FromQuery] string sortBy, [FromQuery] string search,
+            [FromQuery] string order = "asc")
         {
             sortBy = string.IsNullOrEmpty(sortBy) ? "Id" : sortBy;
-            var sortByProperty = typeof(Event).GetProperty(sortBy); 
-            
+            var sortByProperty = typeof(Event).GetProperty(sortBy);
+
             var resultList = new List<Event>();
 
-            if (search != null)
+            if (search != null)     
                 await foreach (var currentEvent in _context.Events)
                 {
                     if (currentEvent.ToString().Contains(search))
@@ -45,7 +48,7 @@ namespace SoftServe_BackEnd.Controllers
             }
 
             var pageFilter = new PaginationFilter(filter.PageNumber, filter.PageSize);
-            
+
             var pagedData = resultList
                 .Skip((pageFilter.PageNumber - 1) * pageFilter.PageSize)
                 .Take(pageFilter.PageSize).ToList().OrderBy(employee =>
@@ -54,17 +57,18 @@ namespace SoftServe_BackEnd.Controllers
             {
                 pagedData.Reverse();
             }
-            
+
             var totalRecords = await _context.Events.CountAsync();
             var pagedResponse = Pagination.CreatePagedResponse(pagedData, pageFilter, totalRecords);
-            
+
             if (pagedResponse.TotalRecords == 0)
             {
                 pagedResponse.Message = "Page is empty";
             }
+
             return Ok(pagedResponse);
         }
-        
+
         [HttpGet("{id}")]
         public async Task<IActionResult> GetEvent(int id)
         {
@@ -72,27 +76,37 @@ namespace SoftServe_BackEnd.Controllers
             {
                 return NotFound();
             }
+
             var currentEvent = await _context.Events.FindAsync(id);
-            return  Ok(new Response<Event>(currentEvent));;
+            return Ok(new Response<Event>(currentEvent));
         }
-        
+
         [HttpPost]
-        public async Task<ActionResult<Event>> PostEvent(Event newEvent)
+        public async Task<ActionResult<Event>> PostEvent([FromBody]CreateEvent eventInfo)
         {
+            var emailOfCurrentUser = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var newEvent = new Event
+            {
+                CreatedBy = emailOfCurrentUser,
+                CreatedByNavigation = _context.Clients.FirstOrDefault(
+                    clientModel => clientModel.Email == emailOfCurrentUser
+                ),
+                Date = DateTime.Now,
+                Description = eventInfo.Description,
+                Name = eventInfo.Name,
+                Place = eventInfo.Place,
+                Type = eventInfo.Type
+
+            };
             await _context.Events.AddAsync(newEvent);
             await _context.SaveChangesAsync();
-            return CreatedAtAction(nameof(GetEvent), new { id = newEvent.Id }, newEvent);
+            return Ok(new Response<CreateEvent>(eventInfo));
         }
         
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutEvent(int id, Event currentEvent)
+        public async Task<IActionResult> PutEvent(int id, [FromBody]Event eventInfo)
         {
-            if (id != currentEvent.Id)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(currentEvent).State = EntityState.Modified;
+            _context.Entry(eventInfo).State = EntityState.Modified;
             try
             {
                 await _context.SaveChangesAsync();
@@ -106,7 +120,7 @@ namespace SoftServe_BackEnd.Controllers
                 throw;
             }
 
-            return Ok(new Response<Event>(currentEvent));
+            return Ok(new Response<Event>(eventInfo));
         }
         
         [HttpDelete("{id}")]

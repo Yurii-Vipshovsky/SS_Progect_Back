@@ -1,41 +1,18 @@
-using System;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System;
+
+#nullable disable
 
 namespace SoftServe_BackEnd.Models
 {
-    [Table("event")]
     public class Event
     {
-        [Key] 
-        public int Id;
-        
-        [Required] 
-        [Column("created_by")]
-        [MaxLength(20)]
-        public User CreatedBy;
-        
-        [Required]
-        [Column("name")]
-        [MaxLength(100)]
-        public string EventName;
-        
-        [Required]
-        [Column("type")]
-        public VolunteerType TypeOfVolunteer;
-
-        [Required]
-        [Column("place")]
-        [MaxLength(100)]
-        public string Location;
-        
-        [Required]
-        [Column("description")]
-        public string AdditionalInfo;
-        
-        [Required]
-        [Column("date")]
-        public DateTime CarryingOutTime;
-
+        public int Id { get; set; }
+        public string CreatedBy { get; set; }
+        public string Name { get; set; }
+        public string Place { get; set; }
+        public string Description { get; set; }
+        public DateTime? Date { get; set; }
+        public TypeOfVolunteer Type { get; set; }
+        public virtual Client CreatedByNavigation { get; set; }
     }
 }
